@@ -16,13 +16,13 @@ import java.awt.event.WindowEvent;
  * @date 2020/5/25 9:48
  */
 public class TankFrame extends Frame {
-//    static int x=200,y=200;
+    static int WIDTH=800,HEIGHT=600;
 //    Dir dir = Dir.DOWN;
 //    private static final int SPEED = 10;
     Tank tank = new Tank(200,200,Dir.DOWN,false);
-    Bullet bullet = new Bullet(300,300,Dir.DOWN);
+    Bullet bullet = new Bullet(300,300,Dir.DOWN,false);
     public TankFrame(){
-        setSize(800,600);
+        setSize(WIDTH,HEIGHT);
         setResizable(false);
         setTitle("tank war");
         setVisible(true);
@@ -33,6 +33,25 @@ public class TankFrame extends Frame {
                 System.exit(0);
             }
         });
+    }
+
+    /**
+     * 双缓冲解决卡顿问题
+     * @param graphics
+     */
+    Image offScreenImage = null;
+    @Override
+    public void update(Graphics g) {
+        if(offScreenImage==null){
+            offScreenImage = createImage(WIDTH,HEIGHT);
+        }
+        Graphics graphics = offScreenImage.getGraphics();
+        Color color = graphics.getColor();
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0,0,WIDTH,HEIGHT);
+        graphics.setColor(color);
+        paint(graphics);
+        g.drawImage(offScreenImage,0,0,null);
     }
 
     @Override

@@ -19,6 +19,7 @@ public class Bullet {
     private int x,y;
 
     private Dir dir;
+    private boolean emission;
 
 
     public void paint(Graphics graphics) {
