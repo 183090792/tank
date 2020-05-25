@@ -19,7 +19,7 @@ public class TankFrame extends Frame {
 //    static int x=200,y=200;
 //    Dir dir = Dir.DOWN;
 //    private static final int SPEED = 10;
-    Tank tank = new Tank(200,200,Dir.DOWN);
+    Tank tank = new Tank(200,200,Dir.DOWN,false);
     public TankFrame(){
         setSize(800,600);
         setResizable(false);
@@ -37,9 +37,6 @@ public class TankFrame extends Frame {
     @Override
     public void paint(Graphics graphics){
         tank.paint(graphics);
-
-//        x+=10;
-//        y+=10;
     }
 
     class MyKeyListener extends KeyAdapter{
@@ -107,17 +104,23 @@ public class TankFrame extends Frame {
             System.out.println("keyReleased");
         }
         public void setMainTankDir(){
-            if(bL){
-                tank.setDir(Dir.LEFT);
-            }
-            if(bR){
-                tank.setDir(Dir.RIGHT);
-            }
-            if(bU){
-                tank.setDir(Dir.UP);
-            }
-            if(bD){
-                tank.setDir(Dir.DOWN);
+
+            if(!bL && !bR && !bU && !bD){
+                tank.setMoving(false);
+            }else {
+                tank.setMoving(true);
+                if(bL){
+                    tank.setDir(Dir.LEFT);
+                }
+                if(bR){
+                    tank.setDir(Dir.RIGHT);
+                }
+                if(bU){
+                    tank.setDir(Dir.UP);
+                }
+                if(bD){
+                    tank.setDir(Dir.DOWN);
+                }
             }
         }
     }

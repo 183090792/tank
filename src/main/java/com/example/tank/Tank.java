@@ -17,9 +17,17 @@ public class Tank {
     private int x,y;
     private Dir dir = Dir.DOWN;
     private static final int SPEED = 10;
+    private boolean moving = false;
 
     public void paint(Graphics graphics) {
         graphics.fillRect(x,y,50,50);
+        move();
+    }
+
+    private void move() {
+        if(!moving){
+            return;
+        }
         switch (dir){
             case UP:
                 y-=SPEED;
