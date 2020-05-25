@@ -1,4 +1,4 @@
-package com.example.tank;
+package com.example.tank.demo1;
 
 /**
  * 功能说明：

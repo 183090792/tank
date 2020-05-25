@@ -1,4 +1,4 @@
-package com.example.tank;
+package com.example.tank.demo1;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,28 +9,28 @@ import java.awt.*;
  * 功能说明：
  *
  * @author LYZ
- * @date 2020/5/25 14:56
+ * @date 2020/5/25 18:04
  */
-@Data
 @AllArgsConstructor
-public class Tank {
+@Data
+public class Bullet {
+    private static final int SPEED = 100;
+    private static final int WIDTH = 30, HEIGHT = 30;
     private int x,y;
-    private Dir dir = Dir.DOWN;
-    private static final int SPEED = 10;
-    private boolean moving = false;
+
+    private Dir dir;
+    private boolean live = true;
+    private TankFrame tankFrame = null;
+
 
     public void paint(Graphics graphics) {
         Color color = graphics.getColor();
-        graphics.setColor(Color.YELLOW);
-        graphics.fillRect(x,y,50,50);
+        graphics.setColor(Color.RED);
+        graphics.fillOval(x,y,WIDTH,HEIGHT);
         graphics.setColor(color);
         move();
     }
-
     private void move() {
-        if(!moving){
-            return;
-        }
         switch (dir){
             case UP:
                 y-=SPEED;
@@ -45,5 +45,11 @@ public class Tank {
                 x+=SPEED;
                 break;
         }
+        if(x<0||y<0||x>tankFrame.getWidth()||y>tankFrame.getHeight()){
+            live=false;
+            tankFrame.bullets.remove(this);
+        }
     }
+
+
 }

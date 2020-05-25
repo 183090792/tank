@@ -1,13 +1,13 @@
-package com.example.tank;
+package com.example.tank.demo1;
 
-
-import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 功能说明：
@@ -17,10 +17,11 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
     static int WIDTH=800,HEIGHT=600;
+    List<Bullet> bullets = new ArrayList<>();
 //    Dir dir = Dir.DOWN;
 //    private static final int SPEED = 10;
-    Tank tank = new Tank(200,200,Dir.DOWN,false);
-    Bullet bullet = new Bullet(300,300,Dir.DOWN,false);
+    Tank tank = new Tank(200,200,Dir.DOWN,false,this);
+    Bullet bullet = new Bullet(300,300,Dir.DOWN,true,this);
     public TankFrame(){
         setSize(WIDTH,HEIGHT);
         setResizable(false);
@@ -56,8 +57,14 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics graphics){
+        Color color = graphics.getColor();
+        graphics.setColor(Color.white);
+        graphics.drawString("子弹的数量是："+bullets.size(),10,60);
+        graphics.setColor(color);
         tank.paint(graphics);
-        bullet.paint(graphics);
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(graphics);
+        }
     }
 
     class MyKeyListener extends KeyAdapter{
@@ -118,6 +125,8 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_DOWN:
                     bD = false;
                     break;
+                case KeyEvent.VK_CONTROL:
+                    tank.fire();
                 default:
                     break;
             }
