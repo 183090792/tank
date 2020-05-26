@@ -14,13 +14,14 @@ import java.awt.*;
 @AllArgsConstructor
 @Data
 public class Bullet {
-    private static final int SPEED = 100;
+    private static final int SPEED = 2;
     private static final int WIDTH = 30, HEIGHT = 30;
     private int x,y;
 
     private Dir dir;
     private boolean live = true;
     private TankFrame tankFrame = null;
+    private Group group;
 
 
     public void paint(Graphics graphics) {
@@ -65,10 +66,27 @@ public class Bullet {
                 x+=SPEED;
                 break;
         }
+
         if(x<0||y<0||x>tankFrame.getWidth()||y>tankFrame.getHeight()){
             live=false;
             tankFrame.bullets.remove(this);
         }
+    }
+
+    public void collideWith(Tank tank) {
+        if(group==tank.getGroup()){
+            return;
+        }
+        Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
+        Rectangle rectangle1 = new Rectangle(tank.getX(), tank.getY(), WIDTH, HEIGHT);
+        if(rectangle.intersects(rectangle1)){
+//            tankFrame.bullets.remove(this);
+            live=false;
+            tank.setLive(false);
+//            tankFrame.tanks.remove(tank);
+//            tankFrame..setLive(false);
+        }
+//        if(this)
     }
 
 
