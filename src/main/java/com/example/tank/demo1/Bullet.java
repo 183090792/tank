@@ -1,5 +1,6 @@
 package com.example.tank.demo1;
 
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,7 +12,6 @@ import java.awt.*;
  * @author LYZ
  * @date 2020/5/25 18:04
  */
-@AllArgsConstructor
 @Data
 public class Bullet {
     private static final int SPEED = 2;
@@ -22,6 +22,20 @@ public class Bullet {
     private boolean live = true;
     private TankFrame tankFrame = null;
     private Group group;
+    private Rectangle rectangle = new Rectangle();
+
+    public Bullet(int x, int y, Dir dir, boolean live, TankFrame tankFrame, Group group){
+        this.x=x;
+        this.y=y;
+        this.dir=dir;
+        this.live=live;
+        this.tankFrame=tankFrame;
+        this.group=group;
+        this.rectangle.x=this.x;
+        this.rectangle.y=this.y;
+        this.rectangle.width=WIDTH;
+        this.rectangle.height=HEIGHT;
+    }
 
 
     public void paint(Graphics graphics) {
@@ -71,15 +85,17 @@ public class Bullet {
             live=false;
             tankFrame.bullets.remove(this);
         }
+        rectangle.x=x;
+        rectangle.y=y;
     }
 
     public void collideWith(Tank tank) {
         if(group==tank.getGroup()){
             return;
         }
-        Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
-        Rectangle rectangle1 = new Rectangle(tank.getX(), tank.getY(), WIDTH, HEIGHT);
-        if(rectangle.intersects(rectangle1)){
+//        Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
+//        Rectangle rectangle1 = new Rectangle(tank.getX(), tank.getY(), WIDTH, HEIGHT);
+        if(rectangle.intersects(tank.getRectangle())){
 //            tankFrame.bullets.remove(this);
             live=false;
             tank.setLive(false);

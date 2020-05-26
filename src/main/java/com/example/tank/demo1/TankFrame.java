@@ -206,7 +206,7 @@ public class TankFrame extends Frame {
     public static void main(String[] args) throws InterruptedException {
         TankFrame tankFrame = new TankFrame();
         for (int i = 0; i < 5; i++) {
-            tankFrame.tanks.add(new Tank(50+i*80,200,Dir.DOWN,false,tankFrame,true,Group.BAD));
+            tankFrame.tanks.add(new Tank(50+i*80,200,Dir.DOWN,true,tankFrame,true,Group.BAD));
         }
         while (true){
             Thread.sleep(15);
