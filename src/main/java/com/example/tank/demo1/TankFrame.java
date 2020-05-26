@@ -1,6 +1,9 @@
 package com.example.tank.demo1;
 
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

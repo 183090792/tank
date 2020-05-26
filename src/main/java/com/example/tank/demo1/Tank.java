@@ -21,10 +21,25 @@ public class Tank {
     private TankFrame tankFrame = null;
 
     public void paint(Graphics graphics) {
-        Color color = graphics.getColor();
-        graphics.setColor(Color.YELLOW);
-        graphics.fillRect(x,y,50,50);
-        graphics.setColor(color);
+//        Color color = graphics.getColor();
+        switch (dir){
+            case RIGHT:
+                graphics.drawImage(ResourceMgr.goodTankR,x,y,null);
+                break;
+            case LEFT:
+                graphics.drawImage(ResourceMgr.goodTankL,x,y,null);
+                break;
+            case DOWN:
+                graphics.drawImage(ResourceMgr.goodTankD,x,y,null);
+                break;
+            case UP:
+                graphics.drawImage(ResourceMgr.goodTankU,x,y,null);
+                break;
+        }
+//        graphics.drawImage(ResourceMgr.goodTankU,x,y,null);
+//        graphics.setColor(Color.YELLOW);
+//        graphics.fillRect(x,y,50,50);
+//        graphics.setColor(color);
         move();
     }
 

@@ -24,10 +24,30 @@ public class Bullet {
 
 
     public void paint(Graphics graphics) {
-        Color color = graphics.getColor();
-        graphics.setColor(Color.RED);
-        graphics.fillOval(x,y,WIDTH,HEIGHT);
-        graphics.setColor(color);
+        int a = x + ResourceMgr.goodTankD.getWidth() / 2 - ResourceMgr.bulletD.getWidth() / 2;
+        int b = y + ResourceMgr.goodTankD.getHeight()/2;
+        switch (dir){
+            case RIGHT:
+                graphics.drawImage(ResourceMgr.bulletR,x + ResourceMgr.goodTankR.getWidth(),
+                        y + ResourceMgr.goodTankR.getHeight()/2-ResourceMgr.bulletR.getHeight()/2 ,null);
+                break;
+            case LEFT:
+                graphics.drawImage(ResourceMgr.bulletL,x - ResourceMgr.bulletD.getWidth() ,
+                        y + ResourceMgr.goodTankD.getHeight()/2-ResourceMgr.bulletR.getHeight()/2,null);
+                break;
+            case DOWN:
+                graphics.drawImage(ResourceMgr.bulletD,x+ResourceMgr.goodTankD.getWidth() / 2 - ResourceMgr.bulletD.getWidth() / 2,
+                        y + ResourceMgr.goodTankD.getHeight(),null);
+                break;
+            case UP:
+                graphics.drawImage(ResourceMgr.bulletU,x + ResourceMgr.goodTankD.getWidth() / 2 - ResourceMgr.bulletD.getWidth() / 2,
+                        y - ResourceMgr.goodTankD.getHeight()/2,null);
+                break;
+        }
+//        Color color = graphics.getColor();
+//        graphics.setColor(Color.RED);
+//        graphics.fillOval(x,y,WIDTH,HEIGHT);
+//        graphics.setColor(color);
         move();
     }
     private void move() {
