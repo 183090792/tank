@@ -9,5 +9,5 @@ import com.example.tank.demo1.Tank;
  * @date 2020/5/27 10:25
  */
 public abstract class TankOne{
-    abstract Tank creatTank();
+    abstract Tank creatTank() ;
 }
