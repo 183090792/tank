@@ -1,5 +1,8 @@
 package com.example.tank.demo1;
 
+import com.example.tank.demo1.strategy.Fire;
+import com.example.tank.demo1.strategy.TankFireOne;
+import com.example.tank.demo1.strategy.TankFireTwo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -22,6 +25,7 @@ public class Tank {
     private boolean live = true;
     private Group group = Group.BAD;
     private Rectangle rectangle = new Rectangle();
+    private Fire fire ;
 
     public Tank(int x, int y, Dir dir,boolean moving, TankFrame tankFrame, boolean live, Group group){
         this.x=x;
@@ -34,10 +38,12 @@ public class Tank {
         this.rectangle.x=this.x;
         this.rectangle.y=this.y;
         if(group==Group.BAD){
+            fire= new TankFireOne();
             this.rectangle.width=ResourceMgr.badTankD.getWidth();
             this.rectangle.height=ResourceMgr.badTankD.getHeight();
         }
         if(group==Group.GOOD){
+            fire= new TankFireTwo();
             this.rectangle.width=ResourceMgr.goodTankD.getWidth();
             this.rectangle.height=ResourceMgr.goodTankD.getHeight();
         }
@@ -45,7 +51,6 @@ public class Tank {
     }
 
     public void paint(Graphics graphics) {
-//        Color color = graphics.getColor();
         switch (dir){
             case RIGHT:
                 if(group==Group.BAD){
@@ -60,7 +65,6 @@ public class Tank {
                 }else {
                     graphics.drawImage(ResourceMgr.goodTankL,x,y,null);
                 }
-//                graphics.drawImage(ResourceMgr.goodTankL,x,y,null);
                 break;
             case DOWN:
                 if(group==Group.BAD){
@@ -68,7 +72,6 @@ public class Tank {
                 }else {
                     graphics.drawImage(ResourceMgr.goodTankD,x,y,null);
                 }
-//                graphics.drawImage(ResourceMgr.goodTankD,x,y,null);
                 break;
             case UP:
                 if(group==Group.BAD){
@@ -76,7 +79,6 @@ public class Tank {
                 }else {
                     graphics.drawImage(ResourceMgr.goodTankU,x,y,null);
                 }
-//                graphics.drawImage(ResourceMgr.goodTankU,x,y,null);
                 break;
         }
 //        graphics.drawImage(ResourceMgr.goodTankU,x,y,null);
@@ -92,7 +94,6 @@ public class Tank {
         }
         if(group==Group.BAD){
             int random = new Random().nextInt(100);
-            System.out.println(random);
             if(random>95){
                 fire();
                 dir = Dir.random();
@@ -154,7 +155,7 @@ public class Tank {
     }
 
     public void fire(){
-        tankFrame.bullets.add(new Bullet(x,y,dir,true,tankFrame,group)) ;
-        System.out.println(group+"**************");
+        fire.fire(this);
+//        tankFrame.bullets.add(new Bullet(x,y,dir,true,tankFrame,group)) ;
     }
 }

@@ -35,6 +35,7 @@ public class Bullet {
         this.rectangle.y=this.y;
         this.rectangle.width=WIDTH;
         this.rectangle.height=HEIGHT;
+        tankFrame.bullets.add(this);
     }
 
 
@@ -81,9 +82,9 @@ public class Bullet {
                 break;
         }
 
-        if(x<0||y<0||x>tankFrame.getWidth()||y>tankFrame.getHeight()){
+        if(x<0||y<0||x>TankFrame.WIDTH||y>TankFrame.HEIGHT){
             live=false;
-            tankFrame.bullets.remove(this);
+//            TankFrame.bullets.remove(this);
         }
         rectangle.x=x;
         rectangle.y=y;

@@ -20,22 +20,22 @@ public class PropertyMgr {
 
 
 //    第三种 静态内部类保证单例，线程安全基于JVM，JVM每个类只会加载一次
-    private PropertyMgr(){}
-    private static class PropertyMgrHolder{
-        private static final  PropertyMgr propertyMgr = new PropertyMgr();
-    }
-    public static PropertyMgr getInstance(){
-        return PropertyMgrHolder.propertyMgr;
-    }
-
-//    第二种单例，利用枚举完成单例  最完美的单例
-//    public enum PropertyMgrEnum{
-//        INTERFACE ;
-//
-//        public static void main(String[] args) {
-//            PropertyMgrEnum.INTERFACE.hashCode();
-//        }
+//    private PropertyMgr(){}
+//    private static class PropertyMgrHolder{
+//        private static final  PropertyMgr propertyMgr = new PropertyMgr();
 //    }
+//    public static PropertyMgr getInstance(){
+//        return PropertyMgrHolder.propertyMgr;
+//    }
+
+//    第二种单例，利用枚举完成单例  最完美的单例,防止反序列化，因为枚举没有构造方法，反序列化出来的对象与取的对象是同一个
+    public enum PropertyMgrEnum{
+        INTERFACE ;
+
+        public static void main(String[] args) {
+            PropertyMgrEnum.INTERFACE.hashCode();
+        }
+    }
 
 
 

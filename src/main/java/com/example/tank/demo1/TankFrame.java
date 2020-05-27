@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
     static int WIDTH=800,HEIGHT=600;
-    List<Bullet> bullets = new ArrayList<>();
+    public List<Bullet> bullets = new ArrayList<>();
     List<Tank> tanks = new ArrayList<>();
     List<Explode> explodes = new ArrayList<>();
 //    Dir dir = Dir.DOWN;
