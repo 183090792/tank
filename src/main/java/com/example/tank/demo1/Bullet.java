@@ -1,7 +1,5 @@
 package com.example.tank.demo1;
 
-import com.sun.org.apache.regexp.internal.RE;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.awt.*;
@@ -13,32 +11,29 @@ import java.awt.*;
  * @date 2020/5/25 18:04
  */
 @Data
-public class Bullet {
+public class Bullet extends GameObject {
     private static final int SPEED = 2;
     private static final int WIDTH = 30, HEIGHT = 30;
-    private int x,y;
 
     private Dir dir;
     private boolean live = true;
-    private TankFrame tankFrame = null;
     private Group group;
     private Rectangle rectangle = new Rectangle();
 
-    public Bullet(int x, int y, Dir dir, boolean live, TankFrame tankFrame, Group group){
+    public Bullet(int x, int y, Dir dir, boolean live,  Group group){
         this.x=x;
         this.y=y;
         this.dir=dir;
         this.live=live;
-        this.tankFrame=tankFrame;
         this.group=group;
         this.rectangle.x=this.x;
         this.rectangle.y=this.y;
         this.rectangle.width=WIDTH;
         this.rectangle.height=HEIGHT;
-        tankFrame.bullets.add(this);
+        GameModel.getInstance().objects.add(this);
     }
 
-
+    @Override
     public void paint(Graphics graphics) {
         int a = x + ResourceMgr.goodTankD.getWidth() / 2 - ResourceMgr.bulletD.getWidth() / 2;
         int b = y + ResourceMgr.goodTankD.getHeight()/2;

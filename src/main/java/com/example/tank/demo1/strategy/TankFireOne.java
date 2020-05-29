@@ -12,7 +12,7 @@ import com.example.tank.demo1.Tank;
 public class TankFireOne implements Fire {
     @Override
     public void fire(Tank tank) {
-        new Bullet(tank.getX(),tank.getY(),tank.getDir(),true,tank.getTankFrame(),tank.getGroup());
+        new Bullet(tank.getX(),tank.getY(),tank.getDir(),true,tank.getGroup());
 //        tankFrame.bullets.add(new Bullet(tank.getX(),tank.getY(),tank.getDir(),true,tankFrame,tank.getGroup()));
     }
 }
