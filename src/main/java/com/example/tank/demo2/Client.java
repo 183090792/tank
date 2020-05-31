@@ -28,7 +28,7 @@ public class Client {
                     }
                 }
             });
-            future.sync();
+            future.channel().closeFuture().sync();
 
             System.out.println("....");
         } catch (InterruptedException e) {
