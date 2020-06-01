@@ -15,7 +15,7 @@ public class TankFireTwo implements Fire {
     public void fire(Tank tank) {
         Dir[] values = Dir.values();
         for (Dir dir : values) {
-            new Bullet(tank.getX(),tank.getY(),dir,true,tank.getGroup());
+            new Bullet(tank.getX(),tank.getY(),dir,tank.getGroup());
         }
 //        new Bullet(tank.getX(),tank.getY(),tank.getDir(),true,tank.getTankFrame(),tank.getGroup());
 //        tankFrame.bullets.add(new Bullet(tank.getX(),tank.getY(),tank.getDir(),true,tankFrame,tank.getGroup()));

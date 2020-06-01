@@ -8,10 +8,12 @@ public class BulletTankCollider implements Collider {
         if(o1 instanceof Tank && o2 instanceof Bullet){
             Tank tank = (Tank) o1;
             Bullet bullet = (Bullet) o2;
-            if(tank.getGroup()==bullet.getGroup()) return true;
+            if(tank.getGroup()==bullet.getGroup()) {
+                return true;
+            }
             if(tank.getRectangle().intersects(bullet.getRectangle())){
-                tank.setLive(false);
-                bullet.setLive(false);
+                tank.setLiving(false);
+                bullet.setLiving(false);
                 GameModel.getInstance().objects.add(new Explode(tank.getX(),tank.getY()));
                 return false;
             }

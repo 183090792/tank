@@ -19,6 +19,7 @@ public class Explode extends GameObject {
         this.x=x;
         this.y=y;
     }
+    @Override
     public void paint(Graphics graphics){
         graphics.drawImage(ResourceMgr.explodes[step++],x,y,null);
         if(step>=ResourceMgr.explodes.length){

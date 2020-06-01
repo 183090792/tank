@@ -5,6 +5,7 @@ import lombok.Data;
 import java.awt.*;
 @Data
 public abstract class GameObject {
-    int x,y;
-    abstract void paint(Graphics graphics);
+    public int x,y;
+    boolean living = true;
+    public abstract void paint(Graphics graphics);
 }

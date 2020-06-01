@@ -9,6 +9,9 @@ public class ColliderChan {
     List<Collider> colliders = new LinkedList<>();
     public ColliderChan(){
         add(new BulletTankCollider());
+        add(new BulletWallCollider());
+        add(new TankTankCollider());
+        add(new TankWallCollider());
     }
     public void add(Collider c) {
         colliders.add(c);

@@ -15,9 +15,6 @@ public class GameModel {
     private GameModel(){}
     public static GameModel getInstance(){return GAME_MODEL;}
 
-//    public List<Bullet> bullets = new ArrayList<>();
-//    public List<Tank> tanks = new ArrayList<>();
-//    public List<Explode> explodes = new ArrayList<>();
     public List<GameObject> objects = new ArrayList<>();
     public Tank tank ;
 
@@ -25,9 +22,12 @@ public class GameModel {
         GAME_MODEL.init();
     }
     private void init(){
-        tank = new Tank(200,500,Dir.UP,false,true,Group.GOOD);
+        tank = new Tank(200,500,Dir.UP,false,Group.GOOD);
         for (int i = 0; i < 5; i++) {
-            objects.add(new Tank(50+i*80,200,Dir.DOWN,true,true,Group.BAD));
+            objects.add(new Tank(50+i*80,200,Dir.DOWN,true,Group.BAD));
+            objects.add(new Wall(10+i*120,400,80,40));
+
+
         }
     }
 
@@ -43,46 +43,17 @@ public class GameModel {
             objects.get(i).paint(graphics);
         }
 
+//        做碰撞检测
         for (int i = 0; i < objects.size(); i++) {
             for (int j = i+1; j < objects.size(); j++) {
                 ColliderChan colliderChan = new ColliderChan();
                 colliderChan.collider(objects.get(i),objects.get(j));
             }
         }
-//        for (int i = 0; i < objects.size(); i++) {
-//            objects.get(i).paint(graphics);
-//        }
+    }
 
-//        for (int i = 0; i < bullets.size(); i++) {
-//            bullets.get(i).paint(graphics);
-//        }
-
-
-//        for (int i = 0; i < bullets.size(); i++) {
-//            for (int j = 0; j < tanks.size(); j++) {
-//                bullets.get(i).collideWith(tanks.get(j));
-//            }
-//        }
-//        for (Iterator<Bullet> it = bullets.iterator(); it.hasNext(); ) {
-//            Bullet next = it.next();
-//            if (!next.isLive()) {
-//                it.remove();
-////                explode.setExplode(true);
-//            }
-//        }
-//
-//        for (Iterator<Tank> it = tanks.iterator(); it.hasNext(); ) {
-//            Tank next = it.next();
-//            if (!next.isLive()) {
-//                it.remove();
-//                explodes.add(new Explode(next.getX(), next.getY(), 0, true));
-//            }
-//        }
-//        for (int i = 0; i < explodes.size(); i++) {
-//            if (explodes.get(i).isExplode()) {
-//                explodes.get(i).paint(graphics);
-//            }
-//        }
+    public void remove(GameObject gameObject){
+        objects.remove(gameObject);
     }
 
 }

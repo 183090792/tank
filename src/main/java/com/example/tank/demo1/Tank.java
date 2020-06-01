@@ -17,20 +17,19 @@ import java.util.Random;
  */
 @Data
 public class Tank extends GameObject {
+    private int oldX,oldY;
     private static final int SPEED = 1;
     private Dir dir ;
     private boolean moving = false;
-    private boolean live = true;
     private Group group = Group.BAD;
     private Rectangle rectangle = new Rectangle();
     private Fire fire ;
 
 
-    public Tank(int x, int y, Dir dir,boolean moving,  boolean live, Group group){
+    public Tank(int x, int y, Dir dir,boolean moving,  Group group){
         this.x=x;
         this.y=y;
         this.dir=dir;
-        this.live=live;
         this.moving=moving;
         this.group=group;
         this.rectangle.x=this.x;
@@ -50,6 +49,9 @@ public class Tank extends GameObject {
 
     @Override
     public void paint(Graphics graphics) {
+        if(!living) {
+            GameModel.getInstance().remove(this);
+        }
         switch (dir){
             case RIGHT:
                 if(group==Group.BAD){
@@ -87,7 +89,10 @@ public class Tank extends GameObject {
         move();
     }
 
+
     private void move() {
+        oldX=x;
+        oldY=y;
         if(!moving){
             return;
         }
@@ -120,13 +125,19 @@ public class Tank extends GameObject {
             }
         }
         if(x<0||y<0||x>TankFrame.WIDTH||y>TankFrame.HEIGHT){
-            live=false;
+            living=false;
             GameModel.getInstance().objects.remove(this);
         }
         boundsCheck();
         rectangle.x=x;
         rectangle.y=y;
     }
+
+    public void back() {
+        x=oldX;
+        y=oldY;
+    }
+
     public void boundsCheck(){
         if(x<0){
             x=0;

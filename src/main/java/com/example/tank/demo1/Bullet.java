@@ -16,15 +16,13 @@ public class Bullet extends GameObject {
     private static final int WIDTH = 30, HEIGHT = 30;
 
     private Dir dir;
-    private boolean live = true;
     private Group group;
     private Rectangle rectangle = new Rectangle();
 
-    public Bullet(int x, int y, Dir dir, boolean live,  Group group){
+    public Bullet(int x, int y, Dir dir, Group group){
         this.x=x;
         this.y=y;
         this.dir=dir;
-        this.live=live;
         this.group=group;
         this.rectangle.x=this.x;
         this.rectangle.y=this.y;
@@ -35,6 +33,9 @@ public class Bullet extends GameObject {
 
     @Override
     public void paint(Graphics graphics) {
+        if(!living) {
+            GameModel.getInstance().remove(this);
+        }
         int a = x + ResourceMgr.goodTankD.getWidth() / 2 - ResourceMgr.bulletD.getWidth() / 2;
         int b = y + ResourceMgr.goodTankD.getHeight()/2;
         switch (dir){
@@ -78,28 +79,28 @@ public class Bullet extends GameObject {
         }
 
         if(x<0||y<0||x>TankFrame.WIDTH||y>TankFrame.HEIGHT){
-            live=false;
+            this.living=false;
 //            TankFrame.bullets.remove(this);
         }
         rectangle.x=x;
         rectangle.y=y;
     }
 
-    public void collideWith(Tank tank) {
-        if(group==tank.getGroup()){
-            return;
-        }
-//        Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
-//        Rectangle rectangle1 = new Rectangle(tank.getX(), tank.getY(), WIDTH, HEIGHT);
-        if(rectangle.intersects(tank.getRectangle())){
-//            tankFrame.bullets.remove(this);
-            live=false;
-            tank.setLive(false);
-//            tankFrame.tanks.remove(tank);
-//            tankFrame..setLive(false);
-        }
-//        if(this)
-    }
+//    public void collideWith(Tank tank) {
+//        if(group==tank.getGroup()){
+//            return;
+//        }
+////        Rectangle rectangle = new Rectangle(x, y, WIDTH, HEIGHT);
+////        Rectangle rectangle1 = new Rectangle(tank.getX(), tank.getY(), WIDTH, HEIGHT);
+//        if(rectangle.intersects(tank.getRectangle())){
+////            tankFrame.bullets.remove(this);
+//            living=false;
+//            tank.setLiving(false);
+////            tankFrame.tanks.remove(tank);
+////            tankFrame..setliving(false);
+//        }
+////        if(this)
+//    }
 
 
 }
