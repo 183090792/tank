@@ -63,6 +63,7 @@ public class TankFrame extends Frame {
         g.drawImage(offScreenImage,0,0,null);
     }
 
+    @Override
     public void paint(Graphics graphics){
         GameModel.getInstance().paint(graphics);
     }
