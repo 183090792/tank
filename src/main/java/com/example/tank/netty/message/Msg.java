@@ -1,5 +1,7 @@
 package com.example.tank.netty.message;
 
+import java.awt.*;
+
 /**
  * 功能说明：
  *
@@ -7,4 +9,5 @@ package com.example.tank.netty.message;
  * @date 2020/6/5 11:31
  */
 public interface Msg {
+
 }

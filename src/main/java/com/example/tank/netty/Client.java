@@ -1,5 +1,6 @@
 package com.example.tank.netty;
 
+import com.example.tank.netty.message.TankMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -26,7 +27,9 @@ public class Client {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new ClientChannelAdapter());
+                            socketChannel.pipeline()
+                                    .addLast(new TankMsgEncoder())
+                                    .addLast(new ClientChannelAdapter());
                         }
                     }).connect("localhost", 8888)
                     .sync();
@@ -57,8 +60,8 @@ public class Client {
 class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
-        ctx.channel().writeAndFlush(buf);
+//        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
+        ctx.channel().writeAndFlush(new TankMsg(4,10));
     }
 
     @Override
