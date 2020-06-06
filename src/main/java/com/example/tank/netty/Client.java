@@ -44,6 +44,19 @@ public class Client {
                     }
                 }
             });
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true){
+                        try {
+                            Thread.sleep(10);
+                            ClientFrame.CLIENT_FRAME.repaint();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -61,7 +74,7 @@ class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 //        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
-        ctx.channel().writeAndFlush(new TankMsg(4,10));
+        ctx.channel().writeAndFlush(new TankMsg(4,10,true));
     }
 
     @Override

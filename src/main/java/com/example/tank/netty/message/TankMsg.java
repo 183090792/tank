@@ -14,7 +14,7 @@ import java.awt.*;
 @NoArgsConstructor
 public class TankMsg implements Msg {
     public int x = 0,y=0;
-//    public boolean living = true;
+    public boolean living = true;
 //    public int oldX, oldY;
 
     //    public static final int SPEED = 1;
@@ -24,8 +24,7 @@ public class TankMsg implements Msg {
 //    public Rectangle rectangle = new Rectangle();
 //    public Fire fire ;
     public static void main(String[] args) {
-        TankMsg tankMsg = new TankMsg();
-        System.out.println(tankMsg);
+        System.out.println(Byte.SIZE);
     }
 
 }

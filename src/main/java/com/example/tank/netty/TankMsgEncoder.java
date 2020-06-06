@@ -11,7 +11,7 @@ public class TankMsgEncoder extends MessageToByteEncoder<TankMsg> {
     protected void encode(ChannelHandlerContext channelHandlerContext, TankMsg tankMsg, ByteBuf byteBuf) throws Exception {
         byteBuf.writeInt(tankMsg.getX());
         byteBuf.writeInt(tankMsg.getY());
-//        byteBuf.writeBoolean(tankMsg.living);
+        byteBuf.writeBoolean(tankMsg.living);
 //        byteBuf.writeInt(tankMsg.getOldX());
 //        byteBuf.writeInt(tankMsg.getOldY());
     }

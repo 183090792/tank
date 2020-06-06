@@ -10,13 +10,15 @@ import java.util.List;
 public class TankMsgDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        if (byteBuf.readableBytes() < 8) return;
+        if (byteBuf.readableBytes() < 9) {
+            return;
+        }
         int x = byteBuf.readInt();
         int y = byteBuf.readInt();
-//        boolean living = byteBuf.readBoolean();
+        boolean living = byteBuf.readBoolean();
 //        int oldX = byteBuf.readInt();
 //        int oldY = byteBuf.readInt();
-        list.add(new TankMsg(x,y));
+        list.add(new TankMsg(x,y,living));
 //        list.add(new TankMsg(x,y,living,oldX,oldY));
     }
 }
