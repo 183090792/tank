@@ -1,7 +1,5 @@
 package com.example.tank.demo1;
 
-import com.sun.org.apache.regexp.internal.RE;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.awt.*;
