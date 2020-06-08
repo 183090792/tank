@@ -1,7 +1,7 @@
 package com.example.tank.demo1.netty;
 
-import com.example.tank.netty.message.Msg;
-import com.example.tank.netty.message.TankMsg;
+import com.example.tank.demo1.netty.message.Msg;
+import com.example.tank.demo1.netty.message.TankMsg;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -21,7 +21,8 @@ import io.netty.util.concurrent.GlobalEventExecutor;
  */
 public class Server {
     public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    public static void main(String[] args) {
+
+    public void serverStart(){
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(4);
         ServerBootstrap bootstrap = new ServerBootstrap();
@@ -45,6 +46,8 @@ public class Server {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+    public static void main(String[] args) {
 
     }
 }
