@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TankMsg implements Msg {
+public class TankJoinMsg implements Msg {
     public int x = 0,y=0;
     public boolean living = true;
 //    public int oldX, oldY;

@@ -1,6 +1,6 @@
 package com.example.tank.demo1.netty;
 
-import com.example.tank.demo1.netty.message.TankMsg;
+import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -18,7 +18,7 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
         boolean living = byteBuf.readBoolean();
 //        int oldX = byteBuf.readInt();
 //        int oldY = byteBuf.readInt();
-        list.add(new TankMsg(x,y,living));
+        list.add(new TankJoinMsg(x,y,living));
 //        list.add(new TankMsg(x,y,living,oldX,oldY));
     }
 }

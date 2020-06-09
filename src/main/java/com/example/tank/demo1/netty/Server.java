@@ -1,7 +1,7 @@
 package com.example.tank.demo1.netty;
 
 import com.example.tank.demo1.netty.message.Msg;
-import com.example.tank.demo1.netty.message.TankMsg;
+import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -55,7 +55,7 @@ public class Server {
 class ServerChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        TankMsg tankMsg = (TankMsg) msg;
+        TankJoinMsg tankMsg = (TankJoinMsg) msg;
         System.out.println(tankMsg);
 //        ByteBuf buf = (ByteBuf)msg;
 //        byte[] bytes = new byte[buf.readableBytes()];
@@ -83,7 +83,7 @@ class MsgHandler extends SimpleChannelInboundHandler<Msg>{
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Msg msg) throws Exception {
         try {
-            TankMsg tankMsg = (TankMsg) msg;
+            TankJoinMsg tankMsg = (TankJoinMsg) msg;
             System.out.println(tankMsg);
         } catch (Exception e) {
             e.printStackTrace();

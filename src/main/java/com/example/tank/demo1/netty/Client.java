@@ -1,6 +1,6 @@
 package com.example.tank.demo1.netty;
 
-import com.example.tank.demo1.netty.message.TankMsg;
+import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -75,7 +75,7 @@ class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 //        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
-        ctx.channel().writeAndFlush(new TankMsg(4,10,true));
+        ctx.channel().writeAndFlush(new TankJoinMsg(4,10,true));
     }
 
     @Override

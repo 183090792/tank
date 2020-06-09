@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.awt.*;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * 功能说明：
@@ -26,6 +27,7 @@ public class Tank {
     private Group group = Group.BAD;
     private Rectangle rectangle = new Rectangle();
     private Fire fire ;
+    public UUID id = UUID.randomUUID();
 
     public Tank(int x, int y, Dir dir,boolean moving, TankFrame tankFrame, boolean live, Group group){
         this.x=x;
