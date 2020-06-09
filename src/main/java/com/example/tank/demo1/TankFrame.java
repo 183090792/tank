@@ -1,6 +1,7 @@
 package com.example.tank.demo1;
 
 
+import com.example.tank.demo1.netty.Client;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -21,16 +21,19 @@ import java.util.List;
  * @date 2020/5/25 9:48
  */
 public class TankFrame extends Frame {
+    public static TankFrame TANK_FRAME = new TankFrame();
+    Client client ;
     static int WIDTH=800,HEIGHT=600;
     public List<Bullet> bullets = new ArrayList<>();
-    List<Tank> tanks = new ArrayList<>();
-    List<Explode> explodes = new ArrayList<>();
+//    public List<Tank> tanks = new ArrayList<>();
+    public Map<UUID,Tank> tanks = new HashMap<>();
+    public List<Explode> explodes = new ArrayList<>();
 //    Dir dir = Dir.DOWN;
 //    private static final int SPEED = 10;
-    Tank tank = new Tank(200,500,Dir.UP,false,this,true,Group.GOOD);
+    public Tank tank = new Tank(200,500,Dir.UP,false,this,true,Group.GOOD, UUID.randomUUID());
 //    Bullet bullet = new Bullet(300,300,Dir.DOWN,true,this);
 //    Explode explode = new Explode(100,100,this,0,false);
-    public TankFrame(){
+    private TankFrame(){
         setSize(WIDTH,HEIGHT);
         setResizable(false);
         setTitle("tank war");
@@ -44,6 +47,11 @@ public class TankFrame extends Frame {
         });
     }
 
+    public Tank findTankByUUID(UUID id){
+        Tank tank = tanks.get(id);
+        return tank;
+    }
+
     /**
      * 双缓冲解决卡顿问题
      * @param graphics
@@ -51,6 +59,7 @@ public class TankFrame extends Frame {
     Image offScreenImage = null;
     @Override
     public void update(Graphics g) {
+//        System.out.println("Graphics 开始就被调用");
         if(offScreenImage==null){
             offScreenImage = createImage(WIDTH,HEIGHT);
         }
@@ -66,6 +75,7 @@ public class TankFrame extends Frame {
     @SneakyThrows
     @Override
     public void paint(Graphics graphics){
+//        System.out.println("开始就被调用");
         Color color = graphics.getColor();
         graphics.setColor(Color.white);
         graphics.drawString("子弹的数量是："+bullets.size(),10,60);
@@ -93,7 +103,8 @@ public class TankFrame extends Frame {
             }
         }
 
-        for (Iterator<Tank> it = tanks.iterator();it.hasNext();){
+        Collection<Tank> values = tanks.values();
+        for (Iterator<Tank> it = values.iterator();it.hasNext();){
             Tank next = it.next();
             if(!next.isLive()){
                 it.remove();
@@ -203,8 +214,18 @@ public class TankFrame extends Frame {
         }
     }
 
+//    private void connectToServer(){
+////        client=new Client();
+////        client.connect();
+////    }
     public static void main(String[] args) throws InterruptedException {
-        TankFrame tankFrame = new TankFrame();
+        TankFrame tankFrame = TANK_FRAME;
+        tankFrame.setVisible(true);
+        tankFrame.setSize(WIDTH,HEIGHT);
+//        TankFrame tankFrame = new TankFrame();
+
+//        TANK_FRAME.connectToServer();
+        Client.CLIENT.connect();
 //        for (int i = 0; i < 5; i++) {
 //            tankFrame.tanks.add(new Tank(50+i*80,200,Dir.DOWN,true,tankFrame,true,Group.BAD));
 //        }

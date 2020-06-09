@@ -1,5 +1,10 @@
 package com.example.tank.demo1.netty;
 
+import com.example.tank.demo1.Dir;
+import com.example.tank.demo1.Group;
+import com.example.tank.demo1.Tank;
+import com.example.tank.demo1.TankFrame;
+import com.example.tank.demo1.netty.message.Msg;
 import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -9,6 +14,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.ReferenceCountUtil;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.UUID;
 
 /**
  * 功能说明：
@@ -16,7 +24,10 @@ import io.netty.util.ReferenceCountUtil;
  * @author LYZ
  * @date 2020/6/5 9:56
  */
+@Slf4j
 public class Client {
+    public static final Client CLIENT = new Client();
+    private Client(){}
     private Channel channel;
     public void connect(){
         NioEventLoopGroup group = new NioEventLoopGroup();
@@ -29,6 +40,7 @@ public class Client {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
                                     .addLast(new TankMsgEncoder())
+                                    .addLast(new TankMsgDecoder())
                                     .addLast(new ClientChannelAdapter());
                         }
                     }).connect("localhost", 8888)
@@ -44,18 +56,15 @@ public class Client {
                     }
                 }
             });
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+            new Thread(()->{
                     while (true){
                         try {
                             Thread.sleep(10);
-                            ClientFrame.CLIENT_FRAME.repaint();
+                            TankFrame.TANK_FRAME.repaint();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                }
             }).start();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
@@ -65,28 +74,34 @@ public class Client {
         }
     }
 
-    public void send(String msg){
-        ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes());
-        channel.writeAndFlush(buf);
+    public void send(Msg msg){
+//        ByteBuf buf = Unpooled.copiedBuffer(msg());
+//        channel.writeAndFlush(buf);
     }
 }
 
+@Slf4j
 class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 //        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
-        ctx.channel().writeAndFlush(new TankJoinMsg(4,10,true));
+        ctx.channel().writeAndFlush(new TankJoinMsg(200,200,Dir.UP,false,Group.BAD, UUID.randomUUID()));
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf buf = (ByteBuf)msg;
-        byte[] bytes = new byte[buf.readableBytes()];
-        buf.getBytes(buf.readerIndex(),bytes);
-        System.out.println(new String(bytes));
-        ClientFrame.CLIENT_FRAME.updateText(new String(bytes));
-        if(buf!=null){
-            ReferenceCountUtil.release(buf);
-        }
+        System.out.println("客户端接收到消息");
+        TankJoinMsg tankMsg = (TankJoinMsg) msg;
+        TankFrame.TANK_FRAME.tanks.put(tankMsg.getId(),new Tank(tankMsg.getX(),tankMsg.getY(),tankMsg.getDir(),tankMsg.isMoving(),TankFrame.TANK_FRAME,true,tankMsg.getGroup(),tankMsg.getId()));
+        log.debug("接收服务端信息："+TankFrame.TANK_FRAME.tanks.size());
+//        tankFrame.tanks.add(new Tank(50+i*80,200, Dir.DOWN,true,tankFrame,true, Group.BAD));
+//        ByteBuf buf = (ByteBuf)msg;
+//        byte[] bytes = new byte[buf.readableBytes()];
+//        buf.getBytes(buf.readerIndex(),bytes);
+//        System.out.println(new String(bytes));
+//        ClientFrame.CLIENT_FRAME.updateText(new String(bytes));
+//        if(buf!=null){
+//            ReferenceCountUtil.release(buf);
+//        }
     }
 }

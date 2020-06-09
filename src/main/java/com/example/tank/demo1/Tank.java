@@ -1,5 +1,8 @@
 package com.example.tank.demo1;
 
+import com.example.tank.demo1.netty.Client;
+import com.example.tank.demo1.netty.message.TankJoinMsg;
+import com.example.tank.demo1.netty.message.TankMovingMsg;
 import com.example.tank.demo1.strategy.Fire;
 import com.example.tank.demo1.strategy.TankFireOne;
 import com.example.tank.demo1.strategy.TankFireTwo;
@@ -19,67 +22,84 @@ import java.util.UUID;
 @Data
 public class Tank {
     private static final int SPEED = 1;
-    private int x,y;
-    private Dir dir ;
+    public static int WIDTH = ResourceMgr.goodTankU.getWidth();
+
+    public static int HEIGHT = ResourceMgr.goodTankU.getHeight();
+    private int x, y;
+    private Dir dir;
     private boolean moving = false;
     private TankFrame tankFrame = null;
     private boolean live = true;
     private Group group = Group.BAD;
     private Rectangle rectangle = new Rectangle();
-    private Fire fire ;
+    private Fire fire;
     public UUID id = UUID.randomUUID();
 
-    public Tank(int x, int y, Dir dir,boolean moving, TankFrame tankFrame, boolean live, Group group){
-        this.x=x;
-        this.y=y;
-        this.dir=dir;
-        this.live=live;
-        this.moving=moving;
-        this.tankFrame=tankFrame;
-        this.group=group;
-        this.rectangle.x=this.x;
-        this.rectangle.y=this.y;
-        if(group==Group.BAD){
-            fire= new TankFireOne();
-            this.rectangle.width=ResourceMgr.badTankD.getWidth();
-            this.rectangle.height=ResourceMgr.badTankD.getHeight();
+    public Tank(int x, int y, Dir dir, boolean moving, TankFrame tankFrame, boolean live, Group group, UUID id) {
+        this.x = x;
+        this.y = y;
+        this.dir = dir;
+        this.live = live;
+        this.moving = moving;
+        this.tankFrame = tankFrame;
+        this.group = group;
+        this.rectangle.x = this.x;
+        this.rectangle.y = this.y;
+        if (group == Group.BAD) {
+            fire = new TankFireOne();
+            this.rectangle.width = ResourceMgr.badTankD.getWidth();
+            this.rectangle.height = ResourceMgr.badTankD.getHeight();
         }
-        if(group==Group.GOOD){
-            fire= new TankFireTwo();
-            this.rectangle.width=ResourceMgr.goodTankD.getWidth();
-            this.rectangle.height=ResourceMgr.goodTankD.getHeight();
+        if (group == Group.GOOD) {
+            fire = new TankFireTwo();
+            this.rectangle.width = ResourceMgr.goodTankD.getWidth();
+            this.rectangle.height = ResourceMgr.goodTankD.getHeight();
         }
+        this.id = id;
 
+    }
+    public Tank(TankJoinMsg msg) {
+        this.x = msg.x;
+        this.y = msg.y;
+        this.dir = msg.dir;
+        this.moving = msg.moving;
+        this.group = msg.group;
+        this.id = msg.id;
+
+        rectangle.x = this.x;
+        rectangle.y = this.y;
+        rectangle.width = WIDTH;
+        rectangle.height = HEIGHT;
     }
 
     public void paint(Graphics graphics) {
-        switch (dir){
+        switch (dir) {
             case RIGHT:
-                if(group==Group.BAD){
-                    graphics.drawImage(ResourceMgr.badTankR,x,y,null);
-                }else {
-                    graphics.drawImage(ResourceMgr.goodTankR,x,y,null);
+                if (group == Group.BAD) {
+                    graphics.drawImage(ResourceMgr.badTankR, x, y, null);
+                } else {
+                    graphics.drawImage(ResourceMgr.goodTankR, x, y, null);
                 }
                 break;
             case LEFT:
-                if(group==Group.BAD){
-                    graphics.drawImage(ResourceMgr.badTankL,x,y,null);
-                }else {
-                    graphics.drawImage(ResourceMgr.goodTankL,x,y,null);
+                if (group == Group.BAD) {
+                    graphics.drawImage(ResourceMgr.badTankL, x, y, null);
+                } else {
+                    graphics.drawImage(ResourceMgr.goodTankL, x, y, null);
                 }
                 break;
             case DOWN:
-                if(group==Group.BAD){
-                    graphics.drawImage(ResourceMgr.badTankD,x,y,null);
-                }else {
-                    graphics.drawImage(ResourceMgr.goodTankD,x,y,null);
+                if (group == Group.BAD) {
+                    graphics.drawImage(ResourceMgr.badTankD, x, y, null);
+                } else {
+                    graphics.drawImage(ResourceMgr.goodTankD, x, y, null);
                 }
                 break;
             case UP:
-                if(group==Group.BAD){
-                    graphics.drawImage(ResourceMgr.badTankU,x,y,null);
-                }else {
-                    graphics.drawImage(ResourceMgr.goodTankU,x,y,null);
+                if (group == Group.BAD) {
+                    graphics.drawImage(ResourceMgr.badTankU, x, y, null);
+                } else {
+                    graphics.drawImage(ResourceMgr.goodTankU, x, y, null);
                 }
                 break;
         }
@@ -91,72 +111,74 @@ public class Tank {
     }
 
     private void move() {
-        if(!moving){
+        if (!moving) {
             return;
         }
-        if(group==Group.BAD){
+        if (group == Group.BAD) {
             int random = new Random().nextInt(100);
-            if(random>95){
+            if (random > 95) {
                 fire();
                 dir = Dir.random();
             }
 
         }
-        switch (dir){
+        switch (dir) {
             case UP:
-                y-=SPEED;
+                y -= SPEED;
                 break;
             case DOWN:
-                y+=SPEED;
+                y += SPEED;
                 break;
             case LEFT:
-                x-=SPEED;
+                x -= SPEED;
                 break;
             case RIGHT:
-                x+=SPEED;
+                x += SPEED;
                 break;
         }
-        if(group==Group.BAD){
+        if (group == Group.BAD) {
             int random = new Random().nextInt(100);
-            if(random>95){
+            if (random > 95) {
                 fire();
             }
         }
-        if(x<0||y<0||x>tankFrame.getWidth()||y>tankFrame.getHeight()){
-            live=false;
+        if (x < 0 || y < 0 || x > tankFrame.getWidth() || y > tankFrame.getHeight()) {
+            live = false;
             tankFrame.tanks.remove(this);
         }
         boundsCheck();
-        rectangle.x=x;
-        rectangle.y=y;
+        rectangle.x = x;
+        rectangle.y = y;
+        Client.CLIENT.send(new TankMovingMsg(x,y,dir,true,true,group,id));
     }
-    public void boundsCheck(){
-        if(x<0){
-            x=0;
+
+    public void boundsCheck() {
+        if (x < 0) {
+            x = 0;
         }
-        if(y<0){
-            y=0;
+        if (y < 0) {
+            y = 0;
         }
-        if(group==Group.GOOD){
-            if(x>tankFrame.getWidth()-ResourceMgr.goodTankR.getWidth()){
-                x=tankFrame.getWidth()-ResourceMgr.goodTankR.getWidth();
+        if (group == Group.GOOD) {
+            if (x > tankFrame.getWidth() - ResourceMgr.goodTankR.getWidth()) {
+                x = tankFrame.getWidth() - ResourceMgr.goodTankR.getWidth();
             }
-            if(y>tankFrame.getHeight()-ResourceMgr.goodTankD.getHeight()){
-                y=tankFrame.getHeight()-ResourceMgr.goodTankD.getHeight();
+            if (y > tankFrame.getHeight() - ResourceMgr.goodTankD.getHeight()) {
+                y = tankFrame.getHeight() - ResourceMgr.goodTankD.getHeight();
             }
         }
-        if(group==Group.BAD){
-            if(x>tankFrame.getWidth()-ResourceMgr.badTankR.getWidth()){
-                x=tankFrame.getWidth()-ResourceMgr.badTankR.getWidth();
+        if (group == Group.BAD) {
+            if (x > tankFrame.getWidth() - ResourceMgr.badTankR.getWidth()) {
+                x = tankFrame.getWidth() - ResourceMgr.badTankR.getWidth();
             }
-            if(y>tankFrame.getHeight()-ResourceMgr.badTankD.getHeight()){
-                y=tankFrame.getHeight()-ResourceMgr.badTankD.getHeight();
+            if (y > tankFrame.getHeight() - ResourceMgr.badTankD.getHeight()) {
+                y = tankFrame.getHeight() - ResourceMgr.badTankD.getHeight();
             }
         }
 
     }
 
-    public void fire(){
+    public void fire() {
         fire.fire(this);
 //        tankFrame.bullets.add(new Bullet(x,y,dir,true,tankFrame,group)) ;
     }

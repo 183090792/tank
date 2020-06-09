@@ -37,10 +37,10 @@ public class ClientFrame extends Frame {
 //            }
 //        });
     }
-    private void connectToServer(){
-        client=new Client();
-        client.connect();
-    }
+//    private void connectToServer(){
+//        client=new Client();
+//        client.connect();
+//    }
 
     public void updateText(String msg){
 //        this.ta.setText(ta.getText()+System.getProperty("line.separator")+msg);
@@ -49,7 +49,7 @@ public class ClientFrame extends Frame {
     public static void main(String[] args) {
         ClientFrame frame = ClientFrame.CLIENT_FRAME;
         frame.setVisible(true);
-        frame.connectToServer();
+        Client.CLIENT.connect();
     }
 
     @Override

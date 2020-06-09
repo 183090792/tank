@@ -3,6 +3,7 @@ package com.example.tank.demo1.netty;
 import com.example.tank.demo1.netty.message.Msg;
 import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -34,8 +35,9 @@ public class Server {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
                                     .addLast(new TankMsgDecoder())
-                                    .addLast(new MsgHandler());
-//                                    .addLast(new ServerChannelAdapter());
+                                    .addLast(new TankMsgEncoder())
+//                                    .addLast(new MsgHandler());
+                                    .addLast(new ServerChannelAdapter());
                         }
                     }).bind(8888)
                     .sync();
@@ -60,11 +62,11 @@ class ServerChannelAdapter extends ChannelInboundHandlerAdapter{
 //        ByteBuf buf = (ByteBuf)msg;
 //        byte[] bytes = new byte[buf.readableBytes()];
 //        buf.getBytes(buf.readerIndex(),bytes);
-//        for (Channel client : Server.clients) {
-//            if(!client.id().equals(ctx.channel().id())){
-//                client.writeAndFlush(msg);
-//            }
-//        }
+        for (Channel client : Server.clients) {
+            if(!client.id().equals(ctx.channel().id())){
+                client.writeAndFlush(msg);
+            }
+        }
     }
 
     @Override
@@ -83,8 +85,11 @@ class MsgHandler extends SimpleChannelInboundHandler<Msg>{
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Msg msg) throws Exception {
         try {
+//            ByteBuf buf = (ByteBuf)msg;
+
             TankJoinMsg tankMsg = (TankJoinMsg) msg;
             System.out.println(tankMsg);
+
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
