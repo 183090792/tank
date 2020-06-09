@@ -8,7 +8,6 @@ import lombok.Data;
 
 import java.awt.*;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * 功能说明：
@@ -17,25 +16,21 @@ import java.util.UUID;
  * @date 2020/5/25 14:56
  */
 @Data
-public class Tank {
+public class Tank extends GameObject {
+    private int oldX,oldY;
     private static final int SPEED = 1;
-    private int x,y;
     private Dir dir ;
     private boolean moving = false;
-    private TankFrame tankFrame = null;
-    private boolean live = true;
     private Group group = Group.BAD;
     private Rectangle rectangle = new Rectangle();
     private Fire fire ;
-    public UUID id = UUID.randomUUID();
 
-    public Tank(int x, int y, Dir dir,boolean moving, TankFrame tankFrame, boolean live, Group group){
+
+    public Tank(int x, int y, Dir dir,boolean moving,  Group group){
         this.x=x;
         this.y=y;
         this.dir=dir;
-        this.live=live;
         this.moving=moving;
-        this.tankFrame=tankFrame;
         this.group=group;
         this.rectangle.x=this.x;
         this.rectangle.y=this.y;
@@ -52,7 +47,11 @@ public class Tank {
 
     }
 
+    @Override
     public void paint(Graphics graphics) {
+        if(!living) {
+            GameModel.getInstance().remove(this);
+        }
         switch (dir){
             case RIGHT:
                 if(group==Group.BAD){
@@ -90,7 +89,10 @@ public class Tank {
         move();
     }
 
+
     private void move() {
+        oldX=x;
+        oldY=y;
         if(!moving){
             return;
         }
@@ -122,14 +124,20 @@ public class Tank {
                 fire();
             }
         }
-        if(x<0||y<0||x>tankFrame.getWidth()||y>tankFrame.getHeight()){
-            live=false;
-            tankFrame.tanks.remove(this);
+        if(x<0||y<0||x>TankFrame.WIDTH||y>TankFrame.HEIGHT){
+            living=false;
+            GameModel.getInstance().objects.remove(this);
         }
         boundsCheck();
         rectangle.x=x;
         rectangle.y=y;
     }
+
+    public void back() {
+        x=oldX;
+        y=oldY;
+    }
+
     public void boundsCheck(){
         if(x<0){
             x=0;
@@ -138,19 +146,19 @@ public class Tank {
             y=0;
         }
         if(group==Group.GOOD){
-            if(x>tankFrame.getWidth()-ResourceMgr.goodTankR.getWidth()){
-                x=tankFrame.getWidth()-ResourceMgr.goodTankR.getWidth();
+            if(x>TankFrame.WIDTH-ResourceMgr.goodTankR.getWidth()){
+                x=TankFrame.WIDTH-ResourceMgr.goodTankR.getWidth();
             }
-            if(y>tankFrame.getHeight()-ResourceMgr.goodTankD.getHeight()){
-                y=tankFrame.getHeight()-ResourceMgr.goodTankD.getHeight();
+            if(y>TankFrame.HEIGHT-ResourceMgr.goodTankD.getHeight()){
+                y=TankFrame.HEIGHT-ResourceMgr.goodTankD.getHeight();
             }
         }
         if(group==Group.BAD){
-            if(x>tankFrame.getWidth()-ResourceMgr.badTankR.getWidth()){
-                x=tankFrame.getWidth()-ResourceMgr.badTankR.getWidth();
+            if(x>TankFrame.WIDTH-ResourceMgr.badTankR.getWidth()){
+                x=TankFrame.WIDTH-ResourceMgr.badTankR.getWidth();
             }
-            if(y>tankFrame.getHeight()-ResourceMgr.badTankD.getHeight()){
-                y=tankFrame.getHeight()-ResourceMgr.badTankD.getHeight();
+            if(y>TankFrame.HEIGHT-ResourceMgr.badTankD.getHeight()){
+                y=TankFrame.HEIGHT-ResourceMgr.badTankD.getHeight();
             }
         }
 
