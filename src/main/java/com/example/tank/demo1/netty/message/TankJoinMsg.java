@@ -45,6 +45,7 @@ public class TankJoinMsg implements Msg {
     public TankJoinMsg() {
     }
 
+    @Override
     public void parse(byte[] bytes){
         DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
         try {
@@ -65,6 +66,7 @@ public class TankJoinMsg implements Msg {
         }
     }
 
+    @Override
     public byte[] toBytes(){
         ByteArrayOutputStream baos = null;
         DataOutputStream dos = null;
@@ -95,6 +97,7 @@ public class TankJoinMsg implements Msg {
         return bytes;
     }
 
+    @Override
     public void handle(){
         if(id.equals(TankFrame.TANK_FRAME.tank.id) || TankFrame.TANK_FRAME.findTankByUUID(id) != null){
             Tank tank = new Tank(this);
@@ -102,6 +105,7 @@ public class TankJoinMsg implements Msg {
             Client.CLIENT.send(new TankJoinMsg(TankFrame.TANK_FRAME.tank));
         }
     }
+    @Override
     public MsgType getMsgType(){
         return MsgType.TankJoin;
     }

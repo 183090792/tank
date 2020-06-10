@@ -16,6 +16,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -75,8 +76,9 @@ public class Client {
     }
 
     public void send(Msg msg){
-//        ByteBuf buf = Unpooled.copiedBuffer(msg());
-//        channel.writeAndFlush(buf);
+
+        ByteBuf buf = Unpooled.copiedBuffer(msg.toBytes());
+        channel.writeAndFlush(buf);
     }
 }
 
@@ -84,15 +86,24 @@ public class Client {
 class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        Tank tank = TankFrame.TANK_FRAME.getMainTank();
+//        tank.setGroup(Group.BAD);
+        TankJoinMsg tankJoinMsg = new TankJoinMsg(tank);
+        System.out.println("Client UUID:"+tankJoinMsg.getId());
+        ctx.writeAndFlush(tankJoinMsg);
+//        Random r = new Random();
 //        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
-        ctx.channel().writeAndFlush(new TankJoinMsg(200,200,Dir.UP,false,Group.BAD, UUID.randomUUID()));
+//        ctx.channel().writeAndFlush(TankFrame.TANK_FRAME.getMainTank());
+//        ctx.writeAndFlush(new TankJoinMsg(r.nextInt(TankFrame.WIDTH),r.nextInt(TankFrame.HEIGHT),Dir.UP,false,Group.BAD, UUID.randomUUID()));
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("客户端接收到消息");
         TankJoinMsg tankMsg = (TankJoinMsg) msg;
-        TankFrame.TANK_FRAME.tanks.put(tankMsg.getId(),new Tank(tankMsg.getX(),tankMsg.getY(),tankMsg.getDir(),tankMsg.isMoving(),TankFrame.TANK_FRAME,true,tankMsg.getGroup(),tankMsg.getId()));
+        if(TankFrame.TANK_FRAME.tanks.get(tankMsg.getId())==null && !TankFrame.TANK_FRAME.tank.getId().equals(tankMsg.getId())){
+            TankFrame.TANK_FRAME.tanks.put(tankMsg.getId(),new Tank(tankMsg.getX(),tankMsg.getY(),tankMsg.getDir(),tankMsg.isMoving(),TankFrame.TANK_FRAME,true,tankMsg.getGroup(),tankMsg.getId()));
+        }
         log.debug("接收服务端信息："+TankFrame.TANK_FRAME.tanks.size());
 //        tankFrame.tanks.add(new Tank(50+i*80,200, Dir.DOWN,true,tankFrame,true, Group.BAD));
 //        ByteBuf buf = (ByteBuf)msg;

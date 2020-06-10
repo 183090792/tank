@@ -12,7 +12,7 @@ public class TankMsgEncoder extends MessageToByteEncoder<TankJoinMsg> {
         byteBuf.writeInt(tankMsg.getY());
         byteBuf.writeInt(tankMsg.getDir().ordinal());
         byteBuf.writeBoolean(tankMsg.isMoving());
-        byteBuf.writeBoolean(tankMsg.isLiving());
+//        byteBuf.writeBoolean(tankMsg.isLiving());
         byteBuf.writeInt(tankMsg.getGroup().ordinal());
         byteBuf.writeLong(tankMsg.id.getMostSignificantBits());
         byteBuf.writeLong(tankMsg.id.getLeastSignificantBits());

@@ -23,14 +23,15 @@ import java.util.List;
 public class TankFrame extends Frame {
     public static TankFrame TANK_FRAME = new TankFrame();
     Client client ;
-    static int WIDTH=800,HEIGHT=600;
+    public static int WIDTH=800,HEIGHT=600;
     public List<Bullet> bullets = new ArrayList<>();
 //    public List<Tank> tanks = new ArrayList<>();
     public Map<UUID,Tank> tanks = new HashMap<>();
     public List<Explode> explodes = new ArrayList<>();
 //    Dir dir = Dir.DOWN;
 //    private static final int SPEED = 10;
-    public Tank tank = new Tank(200,500,Dir.UP,false,this,true,Group.GOOD, UUID.randomUUID());
+    Random r = new Random();
+    public Tank tank = new Tank(r.nextInt(800),r.nextInt(600),Dir.UP,false,this,true,Group.GOOD, UUID.randomUUID());
 //    Bullet bullet = new Bullet(300,300,Dir.DOWN,true,this);
 //    Explode explode = new Explode(100,100,this,0,false);
     private TankFrame(){
@@ -50,6 +51,11 @@ public class TankFrame extends Frame {
     public Tank findTankByUUID(UUID id){
         Tank tank = tanks.get(id);
         return tank;
+    }
+
+    public Tank getMainTank() {
+        System.out.println("tankFrame UUID:"+tank.getId());
+        return this.tank;
     }
 
     /**
@@ -83,16 +89,20 @@ public class TankFrame extends Frame {
         graphics.drawString("爆炸的数量是："+explodes.size(),10,100);
         graphics.setColor(color);
         tank.paint(graphics);
-        for (int i = 0; i < tanks.size(); i++) {
-            tanks.get(i).paint(graphics);
+        Collection<Tank> values = tanks.values();
+        for (Tank value : values) {
+            value.paint(graphics);
         }
+//        for (int i = 0; i < values.size(); i++) {
+//            values.get(i).paint(graphics);
+//        }
 
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(graphics);
         }
         for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-                bullets.get(i).collideWith(tanks.get(j));
+            for (Tank value : values) {
+                bullets.get(i).collideWith(value);
             }
         }
         for(Iterator<Bullet> it = bullets.iterator();it.hasNext();){
@@ -103,7 +113,7 @@ public class TankFrame extends Frame {
             }
         }
 
-        Collection<Tank> values = tanks.values();
+
         for (Iterator<Tank> it = values.iterator();it.hasNext();){
             Tank next = it.next();
             if(!next.isLive()){
@@ -225,10 +235,11 @@ public class TankFrame extends Frame {
 //        TankFrame tankFrame = new TankFrame();
 
 //        TANK_FRAME.connectToServer();
+        for (int i = 0; i < 5; i++) {
+            UUID uuid = UUID.randomUUID();
+            tankFrame.tanks.put(uuid,new Tank(50+i*80,200,Dir.DOWN,true,tankFrame,true,Group.BAD,uuid));
+        }
         Client.CLIENT.connect();
-//        for (int i = 0; i < 5; i++) {
-//            tankFrame.tanks.add(new Tank(50+i*80,200,Dir.DOWN,true,tankFrame,true,Group.BAD));
-//        }
         while (true){
             Thread.sleep(15);
             tankFrame.repaint();

@@ -20,6 +20,26 @@ public class TankMovingMsg implements Msg {
     private Group group = Group.BAD;
     public UUID id = UUID.randomUUID();
 
+    @Override
+    public void handle() {
+
+    }
+
+    @Override
+    public byte[] toBytes() {
+        return new byte[0];
+    }
+
+    @Override
+    public void parse(byte[] bytes) {
+
+    }
+
+    @Override
+    public MsgType getMsgType() {
+        return null;
+    }
+
 //    public int oldX, oldY;
 
     //    public static final int SPEED = 1;

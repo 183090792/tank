@@ -20,12 +20,12 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
         int y = byteBuf.readInt();
         Dir dir = Dir.values()[byteBuf.readInt()];
         boolean moving = byteBuf.readBoolean();
-        boolean living = byteBuf.readBoolean();
+//        boolean living = byteBuf.readBoolean();
         Group group = Group.values()[byteBuf.readInt()];
         UUID id = new UUID(byteBuf.readLong(),byteBuf.readLong());
 //        int oldX = byteBuf.readInt();
 //        int oldY = byteBuf.readInt();
-        list.add(new TankJoinMsg(x,y,dir,moving,living,group,id));
+        list.add(new TankJoinMsg(x,y,dir,moving,group,id));
 //        list.add(new TankMsg(x,y,living,oldX,oldY));
     }
 }
