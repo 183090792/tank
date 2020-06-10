@@ -41,10 +41,10 @@ public class Server {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
-                                    .addLast(new TankMsgDecoder())
                                     .addLast(new TankMsgEncoder())
-//                                    .addLast(new MsgHandler());
-                                    .addLast(new ServerChannelAdapter());
+                                    .addLast(new TankMsgDecoder())
+                                    .addLast(new MsgHandler());
+//                                    .addLast(new ServerChannelAdapter());
                         }
                     }).bind(8888)
                     .sync();
@@ -61,7 +61,7 @@ public class Server {
 class ServerChannelAdapter extends ChannelInboundHandlerAdapter{
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ServerFrame.INSTANCE.updateClientMsg(msg.toString());
+//        ServerFrame.INSTANCE.updateClientMsg(msg.toString());
         TankJoinMsg tankMsg = (TankJoinMsg) msg;
         Server.tankJoinMsgMap.put(tankMsg.getId(),tankMsg);
         Collection<TankJoinMsg> values = Server.tankJoinMsgMap.values();
@@ -94,16 +94,35 @@ class ServerChannelAdapter extends ChannelInboundHandlerAdapter{
 class MsgHandler extends SimpleChannelInboundHandler<Msg>{
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Msg msg) throws Exception {
-        try {
-//            ByteBuf buf = (ByteBuf)msg;
 
-            TankJoinMsg tankMsg = (TankJoinMsg) msg;
-            System.out.println(tankMsg);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            ReferenceCountUtil.release(msg);
+        ServerFrame.INSTANCE.updateClientMsg(msg.toString());
+        TankJoinMsg tankMsg = (TankJoinMsg) msg;
+        Server.tankJoinMsgMap.put(tankMsg.getId(),tankMsg);
+        Collection<TankJoinMsg> values = Server.tankJoinMsgMap.values();
+        for (TankJoinMsg value : values) {
+            System.out.println("server UUID:"+value.getId());
+            Server.clients.writeAndFlush(value);
         }
+//        try {
+////            ByteBuf buf = (ByteBuf)msg;
+//
+//            TankJoinMsg tankMsg = (TankJoinMsg) msg;
+//            System.out.println(tankMsg);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }finally {
+//            ReferenceCountUtil.release(msg);
+//        }
+    }
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        Server.clients.add(ctx.channel());
     }
 }

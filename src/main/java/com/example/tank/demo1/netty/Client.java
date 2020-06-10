@@ -78,12 +78,14 @@ public class Client {
     public void send(Msg msg){
 
         ByteBuf buf = Unpooled.copiedBuffer(msg.toBytes());
-        channel.writeAndFlush(buf);
+        if(channel!=null){
+            channel.writeAndFlush(buf);
+        }
     }
 }
 
 @Slf4j
-class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
+class ClientChannelAdapter extends SimpleChannelInboundHandler<Msg>{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         Tank tank = TankFrame.TANK_FRAME.getMainTank();
@@ -98,12 +100,13 @@ class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Msg msg) throws Exception {
         System.out.println("客户端接收到消息");
-        TankJoinMsg tankMsg = (TankJoinMsg) msg;
-        if(TankFrame.TANK_FRAME.tanks.get(tankMsg.getId())==null && !TankFrame.TANK_FRAME.tank.getId().equals(tankMsg.getId())){
-            TankFrame.TANK_FRAME.tanks.put(tankMsg.getId(),new Tank(tankMsg.getX(),tankMsg.getY(),tankMsg.getDir(),tankMsg.isMoving(),TankFrame.TANK_FRAME,true,tankMsg.getGroup(),tankMsg.getId()));
-        }
+        msg.handle();
+//        TankJoinMsg tankMsg = (TankJoinMsg) msg;
+//        if(TankFrame.TANK_FRAME.tanks.get(tankMsg.getId())==null && !TankFrame.TANK_FRAME.tank.getId().equals(tankMsg.getId())){
+//            TankFrame.TANK_FRAME.tanks.put(tankMsg.getId(),new Tank(tankMsg.getX(),tankMsg.getY(),tankMsg.getDir(),tankMsg.isMoving(),TankFrame.TANK_FRAME,true,tankMsg.getGroup(),tankMsg.getId()));
+//        }
         log.debug("接收服务端信息："+TankFrame.TANK_FRAME.tanks.size());
 //        tankFrame.tanks.add(new Tank(50+i*80,200, Dir.DOWN,true,tankFrame,true, Group.BAD));
 //        ByteBuf buf = (ByteBuf)msg;
@@ -115,4 +118,5 @@ class ClientChannelAdapter extends ChannelInboundHandlerAdapter{
 //            ReferenceCountUtil.release(buf);
 //        }
     }
+
 }

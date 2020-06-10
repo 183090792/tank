@@ -19,8 +19,8 @@ import java.util.UUID;
 @Data
 public class TankJoinMsg implements Msg {
 
-    public int x,y;
-    public Dir dir ;
+    public int x, y;
+    public Dir dir;
     public boolean moving = false;
     public Group group = Group.BAD;
     public UUID id = UUID.randomUUID();
@@ -33,6 +33,7 @@ public class TankJoinMsg implements Msg {
         this.id = t.getId();
         this.moving = t.isMoving();
     }
+
     public TankJoinMsg(int x, int y, Dir dir, boolean moving, Group group, UUID id) {
         super();
         this.x = x;
@@ -42,22 +43,23 @@ public class TankJoinMsg implements Msg {
         this.group = group;
         this.id = id;
     }
+
     public TankJoinMsg() {
     }
 
     @Override
-    public void parse(byte[] bytes){
+    public void parse(byte[] bytes) {
         DataInputStream dataInputStream = new DataInputStream(new ByteArrayInputStream(bytes));
         try {
             x = dataInputStream.readInt();
-            y=dataInputStream.readInt();
+            y = dataInputStream.readInt();
             dir = Dir.values()[dataInputStream.readInt()];
             moving = dataInputStream.readBoolean();
             group = Group.values()[dataInputStream.readInt()];
-            id = new UUID(dataInputStream.readLong(),dataInputStream.readLong());
+            id = new UUID(dataInputStream.readLong(), dataInputStream.readLong());
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 dataInputStream.close();
             } catch (IOException e) {
@@ -67,7 +69,7 @@ public class TankJoinMsg implements Msg {
     }
 
     @Override
-    public byte[] toBytes(){
+    public byte[] toBytes() {
         ByteArrayOutputStream baos = null;
         DataOutputStream dos = null;
         byte[] bytes = null;
@@ -85,7 +87,7 @@ public class TankJoinMsg implements Msg {
             bytes = baos.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 baos.close();
                 dos.close();
@@ -98,15 +100,17 @@ public class TankJoinMsg implements Msg {
     }
 
     @Override
-    public void handle(){
-        if(id.equals(TankFrame.TANK_FRAME.tank.id) || TankFrame.TANK_FRAME.findTankByUUID(id) != null){
-            Tank tank = new Tank(this);
-            TankFrame.TANK_FRAME.tanks.put(tank.getId(),tank);
-            Client.CLIENT.send(new TankJoinMsg(TankFrame.TANK_FRAME.tank));
+    public void handle() {
+        if (id.equals(TankFrame.TANK_FRAME.tank.id) || TankFrame.TANK_FRAME.findTankByUUID(id) != null) {
+            return;
         }
+        Tank tank = new Tank(this);
+        TankFrame.TANK_FRAME.tanks.put(tank.getId(), tank);
+        Client.CLIENT.send(new TankJoinMsg(TankFrame.TANK_FRAME.tank));
     }
+
     @Override
-    public MsgType getMsgType(){
+    public MsgType getMsgType() {
         return MsgType.TankJoin;
     }
 }

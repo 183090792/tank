@@ -1,12 +1,9 @@
 package com.example.tank;
 
-import com.example.tank.demo1.ResourceMgr;
-import com.sun.org.apache.bcel.internal.util.ClassPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 
-import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

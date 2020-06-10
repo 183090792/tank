@@ -31,7 +31,7 @@ public class TankFrame extends Frame {
 //    Dir dir = Dir.DOWN;
 //    private static final int SPEED = 10;
     Random r = new Random();
-    public Tank tank = new Tank(r.nextInt(800),r.nextInt(600),Dir.UP,false,this,true,Group.GOOD, UUID.randomUUID());
+    public Tank tank = new Tank(r.nextInt(760),r.nextInt(560),Dir.UP,false,this,true,Group.GOOD, UUID.randomUUID());
 //    Bullet bullet = new Bullet(300,300,Dir.DOWN,true,this);
 //    Explode explode = new Explode(100,100,this,0,false);
     private TankFrame(){
@@ -235,10 +235,10 @@ public class TankFrame extends Frame {
 //        TankFrame tankFrame = new TankFrame();
 
 //        TANK_FRAME.connectToServer();
-        for (int i = 0; i < 5; i++) {
-            UUID uuid = UUID.randomUUID();
-            tankFrame.tanks.put(uuid,new Tank(50+i*80,200,Dir.DOWN,true,tankFrame,true,Group.BAD,uuid));
-        }
+//        for (int i = 0; i < 5; i++) {
+//            UUID uuid = UUID.randomUUID();
+//            tankFrame.tanks.put(uuid,new Tank(50+i*80,200,Dir.DOWN,true,tankFrame,true,Group.BAD,uuid));
+//        }
         Client.CLIENT.connect();
         while (true){
             Thread.sleep(15);
