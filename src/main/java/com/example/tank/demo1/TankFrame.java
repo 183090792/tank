@@ -2,17 +2,16 @@ package com.example.tank.demo1;
 
 
 import com.example.tank.demo1.netty.Client;
-import lombok.Data;
+import com.example.tank.demo1.netty.message.TankStopMsg;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * 功能说明：
@@ -22,7 +21,6 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
     public static TankFrame TANK_FRAME = new TankFrame();
-    Client client ;
     public static int WIDTH=800,HEIGHT=600;
     public List<Bullet> bullets = new ArrayList<>();
 //    public List<Tank> tanks = new ArrayList<>();
@@ -172,6 +170,7 @@ public class TankFrame extends Frame {
                     break;
             }
             setMainTankDir();
+            Client.CLIENT.send(new TankStopMsg(tank));
             repaint();
         }
 
@@ -206,6 +205,7 @@ public class TankFrame extends Frame {
 
             if(!bL && !bR && !bU && !bD){
                 tank.setMoving(false);
+                Client.CLIENT.send(new TankStopMsg(tank));
             }else {
                 tank.setMoving(true);
                 if(bL){
@@ -220,6 +220,7 @@ public class TankFrame extends Frame {
                 if(bD){
                     tank.setDir(Dir.DOWN);
                 }
+
             }
         }
     }

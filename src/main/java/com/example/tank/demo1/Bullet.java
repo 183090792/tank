@@ -3,6 +3,7 @@ package com.example.tank.demo1;
 import lombok.Data;
 
 import java.awt.*;
+import java.util.UUID;
 
 /**
  * 功能说明：
@@ -15,14 +16,16 @@ public class Bullet {
     private static final int SPEED = 2;
     private static final int WIDTH = 30, HEIGHT = 30;
     private int x,y;
-
+    private UUID id = UUID.randomUUID();
+    private UUID playerId;
     private Dir dir;
     private boolean live = true;
     private TankFrame tankFrame = null;
     private Group group;
     private Rectangle rectangle = new Rectangle();
 
-    public Bullet(int x, int y, Dir dir, boolean live, TankFrame tankFrame, Group group){
+    public Bullet(UUID playerId,int x, int y, Dir dir, boolean live, TankFrame tankFrame, Group group){
+        this.playerId = playerId;
         this.x=x;
         this.y=y;
         this.dir=dir;

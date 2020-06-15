@@ -37,6 +37,7 @@ public class Client {
             ChannelFuture future = bootstrap.group(group)
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
+
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             socketChannel.pipeline()
@@ -44,8 +45,7 @@ public class Client {
                                     .addLast(new TankMsgDecoder())
                                     .addLast(new ClientChannelAdapter());
                         }
-                    }).connect("localhost", 8888)
-                    .sync();
+                    }).connect("localhost", 8888);
             future.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
@@ -67,6 +67,7 @@ public class Client {
                         }
                     }
             }).start();
+            future.sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -76,10 +77,10 @@ public class Client {
     }
 
     public void send(Msg msg){
-
-        ByteBuf buf = Unpooled.copiedBuffer(msg.toBytes());
+        System.out.println("client 开始发送消息");
+//        ByteBuf buf = Unpooled.copiedBuffer(msg.toBytes());
         if(channel!=null){
-            channel.writeAndFlush(buf);
+            channel.writeAndFlush(msg);
         }
     }
 }
@@ -88,11 +89,13 @@ public class Client {
 class ClientChannelAdapter extends SimpleChannelInboundHandler<Msg>{
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        Tank tank = TankFrame.TANK_FRAME.getMainTank();
-//        tank.setGroup(Group.BAD);
-        TankJoinMsg tankJoinMsg = new TankJoinMsg(tank);
-        System.out.println("Client UUID:"+tankJoinMsg.getId());
-        ctx.writeAndFlush(tankJoinMsg);
+        ctx.writeAndFlush(new TankJoinMsg(TankFrame.TANK_FRAME.getMainTank()));
+//        Tank tank = TankFrame.TANK_FRAME.getMainTank();
+////        tank.setGroup(Group.BAD);
+//        TankJoinMsg tankJoinMsg = new TankJoinMsg(tank);
+//        System.out.println("Client UUID:"+tankJoinMsg.getId());
+//        ctx.channel().writeAndFlush(tankJoinMsg);
+//        ctx.writeAndFlush(tankJoinMsg);
 //        Random r = new Random();
 //        ByteBuf buf = Unpooled.copiedBuffer((Thread.currentThread().getName()+"hello").getBytes());
 //        ctx.channel().writeAndFlush(TankFrame.TANK_FRAME.getMainTank());

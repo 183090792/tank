@@ -1,5 +1,7 @@
 package com.example.tank.demo1.netty.message;
 
+import java.io.IOException;
+
 /**
  * 功能说明：
  *
@@ -8,7 +10,7 @@ package com.example.tank.demo1.netty.message;
  */
 public interface Msg {
     public abstract void handle();
-    public abstract byte[] toBytes();
+    public abstract byte[] toBytes() throws IOException;
     public abstract void parse(byte[] bytes);
     public abstract MsgType getMsgType();
 }

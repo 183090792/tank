@@ -2,6 +2,7 @@ package com.example.tank.demo1.netty;
 
 import com.example.tank.demo1.Tank;
 import com.example.tank.demo1.netty.message.Msg;
+import com.example.tank.demo1.netty.message.MsgType;
 import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
@@ -96,12 +97,16 @@ class MsgHandler extends SimpleChannelInboundHandler<Msg>{
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Msg msg) throws Exception {
 
         ServerFrame.INSTANCE.updateClientMsg(msg.toString());
-        TankJoinMsg tankMsg = (TankJoinMsg) msg;
-        Server.tankJoinMsgMap.put(tankMsg.getId(),tankMsg);
-        Collection<TankJoinMsg> values = Server.tankJoinMsgMap.values();
-        for (TankJoinMsg value : values) {
-            System.out.println("server UUID:"+value.getId());
-            Server.clients.writeAndFlush(value);
+        if(msg.getMsgType().equals(MsgType.TankJoin)){
+            TankJoinMsg tankMsg = (TankJoinMsg) msg;
+            Server.tankJoinMsgMap.put(tankMsg.getId(),tankMsg);
+            Collection<TankJoinMsg> values = Server.tankJoinMsgMap.values();
+            for (TankJoinMsg value : values) {
+                System.out.println("server UUID:"+value.getId());
+                Server.clients.writeAndFlush(value);
+            }
+        }else {
+            Server.clients.writeAndFlush(msg);
         }
 //        try {
 ////            ByteBuf buf = (ByteBuf)msg;

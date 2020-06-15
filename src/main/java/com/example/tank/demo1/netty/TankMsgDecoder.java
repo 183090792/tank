@@ -1,17 +1,12 @@
 package com.example.tank.demo1.netty;
 
-import com.example.tank.demo1.Dir;
-import com.example.tank.demo1.Group;
 import com.example.tank.demo1.netty.message.Msg;
 import com.example.tank.demo1.netty.message.MsgType;
-import com.example.tank.demo1.netty.message.TankJoinMsg;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import org.apache.logging.log4j.message.ReusableMessage;
 
 import java.util.List;
-import java.util.UUID;
 
 public class TankMsgDecoder extends ByteToMessageDecoder {
     /**
@@ -31,16 +26,20 @@ public class TankMsgDecoder extends ByteToMessageDecoder {
         }
         byteBuf.markReaderIndex();
         System.out.println("TankMsgDecoder 1、"+byteBuf.readInt()+"   2、"+byteBuf.readInt());
+        byteBuf.resetReaderIndex();
         MsgType msgType = null;
         msgType = MsgType.values()[byteBuf.readInt()];
+        System.out.println("TankMsgDecoder 1、"+msgType);
         int length = byteBuf.readInt();
         if (byteBuf.readableBytes() < length) {
             byteBuf.resetReaderIndex();
             return;
         }
+
         byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes);
         Msg msg = null;
+        System.out.println("msgType : "+msgType.toString());
         msg = (Msg) Class.forName("com.example.tank.demo1.netty.message." + msgType.toString() + "Msg").getDeclaredConstructor().newInstance();
         msg.parse(bytes);
         list.add(msg);

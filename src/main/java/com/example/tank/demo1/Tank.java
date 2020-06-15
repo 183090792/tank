@@ -2,7 +2,7 @@ package com.example.tank.demo1;
 
 import com.example.tank.demo1.netty.Client;
 import com.example.tank.demo1.netty.message.TankJoinMsg;
-import com.example.tank.demo1.netty.message.TankMovingMsg;
+import com.example.tank.demo1.netty.message.TankStopMsg;
 import com.example.tank.demo1.strategy.Fire;
 import com.example.tank.demo1.strategy.TankFireOne;
 import com.example.tank.demo1.strategy.TankFireTwo;
@@ -108,6 +108,8 @@ public class Tank {
 //        graphics.fillRect(x,y,50,50);
 //        graphics.setColor(color);
         move();
+
+
     }
 
     private void move() {
@@ -149,7 +151,9 @@ public class Tank {
         boundsCheck();
         rectangle.x = x;
         rectangle.y = y;
-        Client.CLIENT.send(new TankMovingMsg(x,y,dir,true,true,group,id));
+        //发出坦克移动的消息
+        if(!tankFrame.tank.isMoving())
+            Client.CLIENT.send(new TankStopMsg(tankFrame.getMainTank()));
     }
 
     public void boundsCheck() {
